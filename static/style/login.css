@@ -1,0 +1,122 @@
+/* Global styles */
+body {
+  background-color: blanchedalmond;
+  background-image: url('../background.png');
+  background-size: cover;
+  color: #ffffff;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Login page specific styles */
+.login {
+  background-color: rgba(0, 0, 0, 0.8); /* Darkened background */
+  box-shadow: 0 0 10px rgba(0, 128, 0, 0.5); /* Green shadow */
+  padding: 40px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  position: relative; /* For background image positioning */
+}
+
+
+
+.login-to-access {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.input-fields-parent {
+  display: flex;
+  justify-content: center; /* Center items horizontally */
+  align-items: flex-start; /* Align items to the top */
+}
+
+.input-fields {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 20px;
+  background-color: rgba(255, 255, 255, 0.1); /* Transparent white background */
+  padding: 20px; /* Increased padding for better visual */
+  border-radius: 8px; /* Rounded corners */
+}
+
+.login1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.enter-your-account {
+  font-size: 14px;
+  color: #cccccc;
+  margin-bottom: 20px;
+}
+
+.username-input,
+.password-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #55c57a; /* Green border */
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.3); /* Light green background */
+  color: #ffffff; /* White text */
+}
+
+.username-input::placeholder,
+.password-input::placeholder {
+  color: #cccccc; /* Placeholder color */
+}
+
+.forgot-password {
+  font-size: 14px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.forgot-password a {
+  color:#3d9e5e;
+  text-decoration: none;
+}
+
+.login-wrapper {
+  width: 100%;
+  background-color: #55c57a; /* Green background */
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-wrapper:hover {
+  background-color: #3d9e5e; /* Darker green on hover */
+}
+
+.logo-image-icon {
+  width: auto;
+  height: auto; /* Adjust size as needed */
+  margin-top: 20px; /* Space between form and image */
+  position: absolute;
+  top: 15%;
+  right: 0;
+  bottom: 0;
+  left: 70%;
+  z-index: -1;
+}
