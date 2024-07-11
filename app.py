@@ -46,18 +46,19 @@ def train_model_under():
 @app.route('/upload_image', methods=['POST'])
 def upload_image():
     folder_name = request.form['folderName']
-    image = request.files['image']
+    images = request.files.getlist('image')  # Get multiple files
 
-    folder_path = os.path.join(app.config['UPLOAD_FOLDER'], 'Data', folder_name)
+    folder_path = os.path.join(app.config['UPLOAD_FOLDER'],'Data', folder_name)
     os.makedirs(folder_path, exist_ok=True)
 
-    if image:
-        image_path = os.path.join(folder_path, image.filename)
-        image.save(image_path)
-        flash('Image uploaded successfully!', 'uccess')
+    if images:
+        for image in images:
+            image_path = os.path.join(folder_path, image.filename)
+            image.save(image_path)
+        flash('Images uploaded successfully!', 'uccess')
         return redirect(url_for('up_confirm'))
     else:
-        flash('Failed to upload image.', 'error')
+        flash('Failed to upload images.', 'error')
         return redirect(url_for('train_facial_reco'))
 
 
