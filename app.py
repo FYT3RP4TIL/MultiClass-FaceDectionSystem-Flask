@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
+from DataProcessing import preprocess_images
 
 app = Flask(__name__)
 app.secret_key = 'upersecretkey'
@@ -48,14 +49,19 @@ def upload_image():
     folder_name = request.form['folderName']
     images = request.files.getlist('image')  # Get multiple files
 
-    folder_path = os.path.join(app.config['UPLOAD_FOLDER'],'Data', folder_name)
+    folder_path = os.path.join(app.config['UPLOAD_FOLDER'], 'Data', folder_name)
     os.makedirs(folder_path, exist_ok=True)
 
     if images:
         for image in images:
             image_path = os.path.join(folder_path, image.filename)
             image.save(image_path)
-        flash('Images uploaded successfully!', 'uccess')
+
+        # Preprocess the uploaded images
+        output_folder = os.path.join(app.config['UPLOAD_FOLDER'], 'Cropped_Data', folder_name)
+        preprocess_images(folder_path, output_folder)
+
+        flash('Images uploaded and processed successfully!', 'success')
         return redirect(url_for('up_confirm'))
     else:
         flash('Failed to upload images.', 'error')
