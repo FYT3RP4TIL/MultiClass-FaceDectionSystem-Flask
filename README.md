@@ -6,7 +6,6 @@
 
 ```bash
 git clone https://github.com/yourusername/face-recognition-web-app.git
-cd FaceRecognition-GenderApp-Flask
 ```
 
 ### 2. Create a Virtual Environment
