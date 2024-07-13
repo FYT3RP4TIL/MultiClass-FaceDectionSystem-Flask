@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 import os
 from DataProcessing import preprocess_images
+import tempfile
+import shutil
 
 app = Flask(__name__)
 app.secret_key = 'upersecretkey'
@@ -23,7 +25,6 @@ def login():
         password = request.form['password']
 
         if username == 'admin' and password == 'admin':
-            flash('Login successful!', 'uccess')
             return redirect(url_for('navigation'))
         else:
             flash('Invalid credentials, please try again.', 'error')
@@ -33,7 +34,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    flash('You have been logged out.', 'uccess')
+    flash('You have been logged out.', 'Success')
     return redirect(url_for('login'))
 
 @app.route('/upload')
@@ -49,7 +50,29 @@ def upload_image():
     folder_name = request.form['folderName']
     images = request.files.getlist('image')  # Get multiple files
 
+    if not folder_name:
+        flash('Folder name is missing.', 'error')
+        return redirect(url_for('train_facial_reco'))
+    
+    if not images:
+        flash('No images selected for upload.', 'error')
+        return redirect(url_for('train_facial_reco'))
+
     folder_path = os.path.join(app.config['UPLOAD_FOLDER'], 'Data', folder_name)
+
+    if os.path.exists(folder_path):
+        temp_dir = tempfile.mkdtemp()  # Create a temporary directory to store the images
+        for image in images:
+            image_path = os.path.join(temp_dir, image.filename)
+            image.save(image_path)
+
+        # Store folder_name and temp_dir in session
+        session['folder_name'] = folder_name
+        session['temp_dir'] = temp_dir
+
+        flash('Folder already exists!', 'error')
+        return redirect(url_for('popup_page'))
+    
     os.makedirs(folder_path, exist_ok=True)
 
     if images:
@@ -68,6 +91,42 @@ def upload_image():
         return redirect(url_for('train_facial_reco'))
 
 
+@app.route('/add_photos', methods=['POST'])
+def add_photos():
+    folder_name = request.form['folderName']
+    temp_dir = request.form['tempDir']
+
+    if not folder_name or not temp_dir:
+        flash('Missing folder name or temporary directory.', 'error')
+        return redirect(url_for('train_facial_reco'))
+
+    folder_path = os.path.join(app.config['UPLOAD_FOLDER'], 'Data', folder_name)
+
+    try:
+        # Move images from temp_dir to folder_path
+        for file_name in os.listdir(temp_dir):
+            temp_image_path = os.path.join(temp_dir, file_name)
+            final_image_path = os.path.join(folder_path, file_name)
+            shutil.move(temp_image_path, final_image_path)
+        
+        shutil.rmtree(temp_dir)  # Remove temporary directory
+
+        # Preprocess the uploaded images
+        output_folder = os.path.join(app.config['UPLOAD_FOLDER'], 'Cropped_Data', folder_name)
+        preprocess_images(folder_path, output_folder)
+
+        flash('New images uploaded and processed successfully!', 'success')
+        return redirect(url_for('up_confirm'))
+    
+    except Exception as e:
+        flash(f'Failed to upload images: {str(e)}', 'error')
+        return redirect(url_for('train_facial_reco'))
+    
+@app.route('/discard', methods=['POST'])
+def discard():
+    flash('Upload discarded.', 'info')
+    return redirect(url_for('train_facial_reco'))
+
 @app.route('/face_detection')
 def face_detection():
     return render_template('face_detection_page.html')
@@ -80,6 +139,11 @@ def forgot_password():
 def up_confirm():
     return render_template('upload_confirmation_page.html')
 
+@app.route('/popup_page')
+def popup_page():
+    folder_name = session.get('folder_name')
+    temp_dir = session.get('temp_dir')
+    return render_template('popup_page.html', folder_name=folder_name, temp_dir=temp_dir)
 
 if __name__ == '__main__':
     app.run(debug=True)
