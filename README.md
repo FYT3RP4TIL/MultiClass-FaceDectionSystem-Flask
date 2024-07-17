@@ -5,7 +5,7 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/face-recognition-web-app.git
+git clone https://github.com/FYT3RP4TIL/MultiClass-FaceDectionSystem-Flask.git
 ```
 
 ### 2. Create a Virtual Environment
