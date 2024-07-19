@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import os
-from DataProcessing import preprocess_images
 import tempfile
 import shutil
+from DataProcessing import preprocess_images
+from VGGTrain import TrainModel
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
-app.secret_key = 'upersecretkey'
+app.secret_key = os.getenv('SECRET_KEY', 'supersecretkey')
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -13,6 +16,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/start_training', methods=['POST'])
+def start_training():
+    TrainModel()  # Start training the model
+    return {'status': 'success'}, 200
 
 @app.route('/navigation')
 def navigation():
@@ -34,14 +42,14 @@ def login():
 
 @app.route('/logout')
 def logout():
-    flash('You have been logged out.', 'Success')
+    flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
 @app.route('/upload')
 def train_facial_reco():
     return render_template('upload_image_for_clean_training.html')
 
-@app.route('/train_m')
+@app.route('/train_m', methods=['GET', 'POST'])
 def train_model_under():
     return render_template('training_under_process.html')
 
@@ -63,7 +71,7 @@ def upload_image():
     if os.path.exists(folder_path):
         temp_dir = tempfile.mkdtemp()  # Create a temporary directory to store the images
         for image in images:
-            image_path = os.path.join(temp_dir, image.filename)
+            image_path = os.path.join(temp_dir, secure_filename(image.filename))
             image.save(image_path)
 
         # Store folder_name and temp_dir in session
@@ -77,7 +85,7 @@ def upload_image():
 
     if images:
         for image in images:
-            image_path = os.path.join(folder_path, image.filename)
+            image_path = os.path.join(folder_path, secure_filename(image.filename))
             image.save(image_path)
 
         # Preprocess the uploaded images
@@ -89,7 +97,6 @@ def upload_image():
     else:
         flash('Failed to upload images.', 'error')
         return redirect(url_for('train_facial_reco'))
-
 
 @app.route('/add_photos', methods=['POST'])
 def add_photos():
@@ -121,7 +128,7 @@ def add_photos():
     except Exception as e:
         flash(f'Failed to upload images: {str(e)}', 'error')
         return redirect(url_for('train_facial_reco'))
-    
+
 @app.route('/discard', methods=['POST'])
 def discard():
     flash('Upload discarded.', 'info')
@@ -144,6 +151,10 @@ def popup_page():
     folder_name = session.get('folder_name')
     temp_dir = session.get('temp_dir')
     return render_template('popup_page.html', folder_name=folder_name, temp_dir=temp_dir)
+
+@app.route('/training_confirmation_page')
+def training_confirmation_page():
+    return render_template('training_confirmation_page.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
