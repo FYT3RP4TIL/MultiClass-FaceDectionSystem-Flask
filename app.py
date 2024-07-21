@@ -4,6 +4,7 @@ import tempfile
 import shutil
 from DataProcessing import preprocess_images
 from VGGTrain import TrainModel
+from VGGPredictions import PredictImage
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -21,6 +22,11 @@ def index():
 @app.route('/start_training', methods=['POST'])
 def start_training():
     TrainModel()  # Start training the model
+    return {'status': 'success'}, 200
+
+@app.route('/start_predicting_image', methods=['POST'])
+def start_predicting_image():
+    PredictImage()  # Start predicting the face with the model
     return {'status': 'success'}, 200
 
 @app.route('/navigation')
@@ -162,6 +168,10 @@ def popup_page():
 @app.route('/training_confirmation_page')
 def training_confirmation_page():
     return render_template('training_confirmation_page.html')
+
+@app.route('/result_page')
+def result_page():
+    return render_template('result_page.html')
 
 @app.route('/upload_image_for_prediction', methods=['POST'])
 def upload_image_for_prediction():
