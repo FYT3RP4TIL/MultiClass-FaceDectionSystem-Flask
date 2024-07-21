@@ -6,12 +6,13 @@ from DataProcessing import preprocess_images
 from VGGTrain import TrainModel
 from werkzeug.utils import secure_filename
 
-
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'supersecretkey')
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+PREDICT_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'predict', 'upload')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['PREDICT_FOLDER'] = PREDICT_FOLDER
 
 @app.route('/')
 def index():
@@ -138,6 +139,12 @@ def discard():
 def face_detection():
     return render_template('face_detection_page.html')
 
+@app.route('/face_detection_under_process')
+def face_detection_under_process():
+    # Provide the path to the uploaded file to the template
+    uploaded_image_url = os.path.join('predict', 'upload', 'uploaded_image.jpg')
+    return render_template('face_detection_under_process.html', image_url=uploaded_image_url)
+
 @app.route('/forgot_password')
 def forgot_password():
     return "Forgot Password Page"
@@ -155,6 +162,30 @@ def popup_page():
 @app.route('/training_confirmation_page')
 def training_confirmation_page():
     return render_template('training_confirmation_page.html')
+
+@app.route('/upload_image_for_prediction', methods=['POST'])
+def upload_image_for_prediction():
+    if 'image' not in request.files:
+        flash('No file part', 'error')
+        return redirect(url_for('face_detection'))
+
+    file = request.files['image']
+    if file.filename == '':
+        flash('No selected file', 'error')
+        return redirect(url_for('face_detection'))
+
+    if file:
+        # Clean the predict/upload folder before saving the file
+        if os.path.exists(app.config['PREDICT_FOLDER']):
+            shutil.rmtree(app.config['PREDICT_FOLDER'])
+        os.makedirs(app.config['PREDICT_FOLDER'], exist_ok=True)
+
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['PREDICT_FOLDER'], filename)
+        file.save(file_path)
+
+        # flash('File uploaded successfully for prediction!', 'success')
+        return redirect(url_for('face_detection_under_process'))
 
 if __name__ == '__main__':
     app.run(debug=True)
