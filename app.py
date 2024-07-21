@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
 import os
 import tempfile
 import shutil
@@ -171,7 +171,8 @@ def training_confirmation_page():
 
 @app.route('/result_page')
 def result_page():
-    return render_template('result_page.html')
+    image_url = url_for('serve_image')
+    return render_template('result_page.html', image_url=image_url)
 
 @app.route('/upload_image_for_prediction', methods=['POST'])
 def upload_image_for_prediction():
@@ -196,6 +197,10 @@ def upload_image_for_prediction():
 
         # flash('File uploaded successfully for prediction!', 'success')
         return redirect(url_for('face_detection_under_process'))
+
+@app.route('/predict/result/result.jpg')
+def serve_image():
+    return send_from_directory('predict/result', 'result.jpg')
 
 if __name__ == '__main__':
     app.run(debug=True)
