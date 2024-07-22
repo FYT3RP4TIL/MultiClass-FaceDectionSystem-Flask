@@ -111,3 +111,38 @@ def PredictImage():
     cv2.imwrite(result_image_path, test_img)
 
     print(f"Result saved at {result_image_path}")
+
+def GenerateFrames():
+    cap = cv2.VideoCapture(0)
+
+    if not cap.isOpened():
+        raise RuntimeError("Error: Could not open video capture.")
+
+    embeddings_df = load_embeddings('models/embeddings.csv')  # Load the saved embeddings
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+
+        if len(faces) > 0:
+            for (x, y, w, h) in faces:
+                face_img = frame[y:y+h, x:x+w]
+                embedding = get_embedding(face_img)
+                if embedding:
+                    best_match, similarity = find_best_match(embedding, embeddings_df, threshold=0.6)
+                    name = best_match if best_match else "Unknown"
+                    frame = predict_image(frame, [(x, y, w, h)], name)
+                else:
+                    frame = predict_image(frame, [(x, y, w, h)], "Unknown")
+
+        _, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+    cap.release()
