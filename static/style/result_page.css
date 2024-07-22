@@ -116,6 +116,7 @@ header {
   justify-content: center;
   align-items: center;
   flex-grow: 1;
+  max-height: calc(100vh - 200px); /* Adjust this value as needed */
   overflow: hidden;
 }
 
