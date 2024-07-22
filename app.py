@@ -202,5 +202,9 @@ def upload_image_for_prediction():
 def serve_image():
     return send_from_directory('predict/result', 'result.jpg')
 
+@app.route('/live_face_recognition')
+def live_face_recognition():
+    return render_template('live_face_recognition.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
