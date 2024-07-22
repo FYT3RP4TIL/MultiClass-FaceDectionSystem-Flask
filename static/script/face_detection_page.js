@@ -1,9 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
   const dropArea = document.getElementById("drop-area");
-  const fileInput = document.getElementById("file-input");
+  const fileInput = document.getElementById("image");
   const uploadButton = document.getElementById("upload-button");
   const browse = document.getElementById("browse");
   const confirmationMessage = document.getElementById("confirmation-message");
+  const openCameraButton = document.getElementById("open_camera");
+  const cameraLogo = document.getElementById("camera-logo");
+
+  const redirectToLiveFaceRecognition = () => {
+    window.location.href = "/live_face_recognition";
+  };
+
+  openCameraButton.addEventListener("click", redirectToLiveFaceRecognition);
+  cameraLogo.addEventListener("click", redirectToLiveFaceRecognition);
 
   browse.addEventListener("click", () => fileInput.click());
 
@@ -81,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((error) => {
         console.error(error);
-        alert("File upload failed.");
       });
   }
 });
