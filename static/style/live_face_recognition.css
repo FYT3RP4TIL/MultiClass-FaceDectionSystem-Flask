@@ -127,3 +127,10 @@ header {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
+/* New CSS for the video element */
+video {
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+}
