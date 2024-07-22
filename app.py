@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory, Response
 import os
 import tempfile
 import shutil
 from DataProcessing import preprocess_images
 from VGGTrain import TrainModel
-from VGGPredictions import PredictImage
+from VGGPredictions import PredictImage,GenerateFrames
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -205,6 +205,10 @@ def serve_image():
 @app.route('/live_face_recognition')
 def live_face_recognition():
     return render_template('live_face_recognition.html')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(GenerateFrames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
     app.run(debug=True)
