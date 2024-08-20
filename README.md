@@ -82,7 +82,7 @@ Open your web browser and go to http://127.0.0.1:5000/ to see the app in action.
   - Display recognized faces along with user details on the web interface.
   - Show real-time recognition results on the live video feed.
 
-## System Flow
+## System Flow ([Figma](https://www.figma.com/design/PYza59lyc3BrfsGVIkuRkx/MultiClass-Face-Detection-System-(View)?m=auto&t=iAkc1cWma8sntGfT-1))
 1. **User Access**:
    - Users can upload images or initiate live video capture through the web interface.
   
