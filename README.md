@@ -48,6 +48,38 @@ python main.py
 ```
 Open your web browser and go to http://127.0.0.1:5000/ to see the app in action.
 
+### 6. Usage
+
+1. **Home Page**: 
+   - Open the application.
+   - Click on the "Get Started Today" button to proceed.
+
+2. **Login Page**:
+   - Enter the credentials: 
+     - **Username**: `admin`
+     - **Password**: `admin`
+   - Click "Login" to access the Navigation Page.
+
+3. **Navigation Page**:
+   - You'll see three options:
+     1. **Upload Images for Training**: Upload images for face recognition.
+     2. **Train Data**: Train the model using the uploaded images.
+     3. **Face Detection**: Use the trained model to predict faces in new images.
+
+4. **Upload Images for Training**:
+   - Click on the  option.
+   - Upload your images with the name.
+   - The images will be preprocessed and stored automatically in the backend.
+
+5. **Train the Model**:
+   - Click on the "Train" option.
+   - The model will train using the preprocessed images and save embeddings
+
+6. **Predict Faces**:
+   - Click on the "Face Detection" option.
+   - Upload a new image to predict and recognize faces using the trained model.
+   - The prediction results will be displayed on the screen you can choose between live-video-feed or on static images.
+
 # :cyclone: System Design
 
 ## Modules
