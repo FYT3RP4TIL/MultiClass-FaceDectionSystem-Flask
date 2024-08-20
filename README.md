@@ -48,7 +48,7 @@ python main.py
 ```
 Open your web browser and go to http://127.0.0.1:5000/ to see the app in action.
 
-# System Design
+# :cyclone: System Design
 
 ## Modules
 
@@ -74,8 +74,7 @@ Open your web browser and go to http://127.0.0.1:5000/ to see the app in action.
 
 ### 5. Database Module
 - **Description**: 
-  - Store preprocessed images, extracted features, and user metadata in a database.
-  - Design the database schema to handle efficient retrieval and storage.
+  - Store preprocessed images, extracted features in respected upload and predict folders
 
 ### 6. Results Display Module
 - **Description**: 
