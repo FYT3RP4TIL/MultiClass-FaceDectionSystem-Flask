@@ -96,3 +96,65 @@ Open your web browser and go to http://127.0.0.1:5000/ to see the app in action.
 
 5. **Results Display**:
    - The results of the recognition process are displayed on the web interface, updating in real-time for live video feeds.
+
+# [Deepface](https://github.com/serengil/deepface)
+<p align="center"><img src="https://github.com/user-attachments/assets/96014b9d-89c1-4eee-b8b7-f99e14f7e17c" width="95%" height="95%"></p>
+
+**Face recognition models** 
+
+DeepFace is a **hybrid** face recognition package. It currently wraps many **state-of-the-art** face recognition models: [`VGG-Face`](https://sefiks.com/2018/08/06/deep-face-recognition-with-keras/) , [`FaceNet`](https://sefiks.com/2018/09/03/face-recognition-with-facenet-in-keras/), [`OpenFace`](https://sefiks.com/2019/07/21/face-recognition-with-openface-in-keras/), [`DeepFace`](https://sefiks.com/2020/02/17/face-recognition-with-facebook-deepface-in-keras/), [`DeepID`](https://sefiks.com/2020/06/16/face-recognition-with-deepid-in-keras/), [`ArcFace`](https://sefiks.com/2020/12/14/deep-face-recognition-with-arcface-in-keras-and-python/), [`Dlib`](https://sefiks.com/2020/07/11/face-recognition-with-dlib-in-python/), `SFace` and `GhostFaceNet`. The default configuration uses VGG-Face model.
+
+```python
+models = [
+  "VGG-Face", 
+  "Facenet", 
+  "Facenet512", 
+  "OpenFace", 
+  "DeepFace", 
+  "DeepID", 
+  "ArcFace", 
+  "Dlib", 
+  "SFace",
+  "GhostFaceNet",
+]
+
+#face verification
+result = DeepFace.verify(
+  img1_path = "img1.jpg",
+  img2_path = "img2.jpg",
+  model_name = models[0],
+)
+
+#face recognition
+dfs = DeepFace.find(
+  img_path = "img1.jpg",
+  db_path = "C:/workspace/my_db", 
+  model_name = models[1],
+)
+
+#embeddings
+embedding_objs = DeepFace.represent(
+  img_path = "img.jpg",
+  model_name = models[2],
+)
+```
+
+FaceNet, VGG-Face, ArcFace and Dlib are overperforming ones based on experiments - see [`BENCHMARKS`](https://github.com/serengil/deepface/tree/master/benchmarks) for more details. You can find the measured scores of various models in DeepFace and the reported scores from their original studies in the following table.
+
+| Model          | Measured Score | Declared Score     |
+| -------------- | -------------- | ------------------ |
+| Facenet512     | 98.4%          | 99.6%              |
+| Human-beings   | 97.5%          | 97.5%              |
+| Facenet        | 97.4%          | 99.2%              |
+| Dlib           | 96.8%          | 99.3 %             |
+| VGG-Face       | 96.7%          | 98.9%              |
+| ArcFace        | 96.7%          | 99.5%              |
+| GhostFaceNet   | 93.3%          | 99.7%              |
+| SFace          | 93.0%          | 99.5%              |
+| OpenFace       | 78.7%          | 92.9%              |
+| DeepFace       | 69.0%          | 97.3%              |
+| DeepID         | 66.5%          | 97.4%              |
+
+Conducting experiments with those models within DeepFace may reveal disparities compared to the original studies, owing to the adoption of distinct detection or normalization techniques. Furthermore, some models have been released solely with their backbones, lacking pre-trained weights. Thus, we are utilizing their re-implementations instead of the original pre-trained weights.
+
+For more information and on how to use the library go to library `https://github.com/serengil/deepface`
